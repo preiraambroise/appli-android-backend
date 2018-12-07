@@ -4,14 +4,16 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(itemOperations={"get","put"},collectionOperations={"post","get"})
  * @ORM\Entity(repositoryClass="App\Repository\QcmRepository")
  */
 class Qcm
 {
     /**
+     * @Groups({"write"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,17 +21,20 @@ class Qcm
     private $id;
 
     /**
+     * @Groups({"write"})
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentaire;
 
     /**
+     * @Groups({"write"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Planning")
      * @ORM\JoinColumn(nullable=false)
      */
     private $planning;
 
     /**
+     * @Groups({"write"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Resultat")
      * @ORM\JoinColumn(nullable=false)
      */

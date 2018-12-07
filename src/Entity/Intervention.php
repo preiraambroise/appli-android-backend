@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(itemOperations={"delete","put"={"denormalization_context"={"groups"={"write"}}}, "get"},collectionOperations={"post"={"denormalization_context"={"groups"={"write"}}}, "get"}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\InterventionRepository")
  */
 class Intervention
@@ -19,6 +21,7 @@ class Intervention
     private $id;
 
     /**
+     * @Groups({"write"})
      * @ORM\Column(type="string", length=255)
      */
     private $jeton;
@@ -31,13 +34,20 @@ class Intervention
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="interventions")
      * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(nullable=true)
      */
     private $user;
 
     /**
+     * @Groups({"write"})
      * @ORM\OneToOne(targetEntity="App\Entity\Qcm",cascade={"persist", "remove"})
      */
     private $qcm;
+
+    public function __construct()
+    {
+        $this->dateenvoi = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -88,5 +98,6 @@ class Intervention
     public function setQcm(Qcm $qcm): self
     {
         $this->qcm = $qcm;
+        return $this;
     }
 }
