@@ -35,7 +35,7 @@ class Intervention
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Qcm", mappedBy="intervention", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Qcm",cascade={"persist", "remove"})
      */
     private $qcm;
 
@@ -88,12 +88,5 @@ class Intervention
     public function setQcm(Qcm $qcm): self
     {
         $this->qcm = $qcm;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $qcm->getIntervention()) {
-            $qcm->setIntervention($this);
-        }
-
-        return $this;
     }
 }

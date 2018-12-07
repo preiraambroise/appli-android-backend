@@ -23,15 +23,8 @@ class Qcm
      */
     private $commentaire;
 
-
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Intervention", inversedBy="qcm", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $intervention;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Planning", inversedBy="qcms")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Planning")
      * @ORM\JoinColumn(nullable=false)
      */
     private $planning;
@@ -55,18 +48,6 @@ class Qcm
     public function setCommentaire(?string $commentaire): self
     {
         $this->commentaire = $commentaire;
-
-        return $this;
-    }
-
-    public function getIntervention(): ?Intervention
-    {
-        return $this->intervention;
-    }
-
-    public function setIntervention(Intervention $intervention): self
-    {
-        $this->intervention = $intervention;
 
         return $this;
     }

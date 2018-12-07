@@ -25,11 +25,6 @@ class Planning
      */
     private $nom;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Qcm", mappedBy="planning")
-     */
-    private $qcms;
-
     public function __construct()
     {
         $this->qcms = new ArrayCollection();
@@ -48,37 +43,6 @@ class Planning
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Qcm[]
-     */
-    public function getQcms(): Collection
-    {
-        return $this->qcms;
-    }
-
-    public function addQcm(Qcm $qcm): self
-    {
-        if (!$this->qcms->contains($qcm)) {
-            $this->qcms[] = $qcm;
-            $qcm->setPlanning($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQcm(Qcm $qcm): self
-    {
-        if ($this->qcms->contains($qcm)) {
-            $this->qcms->removeElement($qcm);
-            // set the owning side to null (unless already changed)
-            if ($qcm->getPlanning() === $this) {
-                $qcm->setPlanning(null);
-            }
-        }
 
         return $this;
     }
