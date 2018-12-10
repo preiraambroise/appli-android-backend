@@ -5,15 +5,18 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
- * @ApiResource(itemOperations={"get","put"},collectionOperations={"post","get"})
+ * @ApiFilter(SearchFilter::class, properties={"qcm.resultat"})
+ * @ApiResource(normalizationContext={"groups"={"read"}}, denormalizationContext={"groups"={"write"}})
  * @ORM\Entity(repositoryClass="App\Repository\QcmRepository")
  */
 class Qcm
 {
     /**
-     * @Groups({"write"})
+     * @Groups({"write", "read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -21,20 +24,20 @@ class Qcm
     private $id;
 
     /**
-     * @Groups({"write"})
+     * @Groups({"write", "read"})
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentaire;
 
     /**
-     * @Groups({"write"})
+     * @Groups({"write", "read"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Planning")
      * @ORM\JoinColumn(nullable=false)
      */
     private $planning;
 
     /**
-     * @Groups({"write"})
+     * @Groups({"write", "read"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Resultat")
      * @ORM\JoinColumn(nullable=false)
      */

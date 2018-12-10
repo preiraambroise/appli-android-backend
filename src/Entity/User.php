@@ -5,12 +5,17 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping\PrePersist;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"read"}})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -23,6 +28,7 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
@@ -39,28 +45,26 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $prenom;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nom;
 
     /**
+     *  @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $telephone;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Intervention", mappedBy="user")
-     */
-    private $interventions;
 
     public function __construct()
     {
-        $this->interventions = new ArrayCollection();
         $this->roles[] = 'ROLE_USER';
     }
 
@@ -173,34 +177,8 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Intervention[]
-     */
-    public function getInterventions(): Collection
+    public function __toString()
     {
-        return $this->interventions;
-    }
-
-    public function addIntervention(Intervention $intervention): self
-    {
-        if (!$this->interventions->contains($intervention)) {
-            $this->interventions[] = $intervention;
-            $intervention->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIntervention(Intervention $intervention): self
-    {
-        if ($this->interventions->contains($intervention)) {
-            $this->interventions->removeElement($intervention);
-            // set the owning side to null (unless already changed)
-            if ($intervention->getUser() === $this) {
-                $intervention->setUser(null);
-            }
-        }
-
-        return $this;
+        return "$this->id";
     }
 }

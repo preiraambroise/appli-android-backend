@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"read"}})
  * @ORM\Entity(repositoryClass="App\Repository\ResultatRepository")
  */
 class Resultat
@@ -19,6 +20,7 @@ class Resultat
     private $id;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255)
      */
     private $nom;

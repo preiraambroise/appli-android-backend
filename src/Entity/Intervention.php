@@ -5,15 +5,20 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\User;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Services\SecurityUserContext;
 
 /**
- * @ApiResource(itemOperations={"delete","put"={"denormalization_context"={"groups"={"write"}}}, "get"},collectionOperations={"post"={"denormalization_context"={"groups"={"write"}}}, "get"}
+ * @ApiResource(normalizationContext={"groups"={"read"}}, denormalizationContext={"groups"={"write"}},itemOperations={"delete","put"={"denormalization_context"={"groups"={"write"}}}, "get"={"normalization_context"={"groups"={"read"}}}},collectionOperations={"post"={"denormalization_context"={"groups"={"write"}}}, "get"={"normalization_context"={"groups"={"read"}}}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\InterventionRepository")
  */
 class Intervention
 {
     /**
+     * @Groups({"write", "read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -21,28 +26,32 @@ class Intervention
     private $id;
 
     /**
-     * @Groups({"write"})
+     * @Groups({"write", "read"})
      * @ORM\Column(type="string", length=255)
      */
     private $jeton;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="datetime")
      */
     private $dateenvoi;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="interventions")
-     * @ORM\JoinColumn(nullable=false)
-     * @ORM\Column(nullable=true)
-     */
-    private $user;
-
-    /**
-     * @Groups({"write"})
+     * @ApiFilter(SearchFilter::class, properties={"qcm.planning": "exact"})
+     * @Groups({"write","read"})
      * @ORM\OneToOne(targetEntity="App\Entity\Qcm",cascade={"persist", "remove"})
      */
     private $qcm;
+
+    /**
+     * @ApiFilter(SearchFilter::class, properties={"user": "exact"})
+     * @Groups({"read"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
     public function __construct()
     {
@@ -76,6 +85,7 @@ class Intervention
         $this->dateenvoi = $dateenvoi;
 
         return $this;
+
     }
 
     public function getUser(): ?User
@@ -86,7 +96,6 @@ class Intervention
     public function setUser(?User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
