@@ -11,7 +11,19 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Services\SecurityUserContext;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"read"}}, denormalizationContext={"groups"={"write"}},itemOperations={"delete","put"={"denormalization_context"={"groups"={"write"}}}, "get"={"normalization_context"={"groups"={"read"}}}},collectionOperations={"post"={"denormalization_context"={"groups"={"write"}}}, "get"={"normalization_context"={"groups"={"read"}}}}
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}},
+ *     itemOperations={
+ *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "put"={"denormalization_context"={"groups"={"write"}}, "access_control"="is_granted('ROLE_ADMIN')"},
+ *          "get"={"normalization_context"={"groups"={"read"}}}
+ *     },
+ *     collectionOperations={
+ *          "post"={"denormalization_context"={"groups"={"write"}}},
+ *           "get"={"normalization_context"={"groups"={"read"}}}
+ *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\InterventionRepository")
  */
@@ -38,7 +50,7 @@ class Intervention
     private $dateenvoi;
 
     /**
-     * @ApiFilter(SearchFilter::class, properties={"qcm.planning": "exact"})
+     * @ApiFilter(SearchFilter::class, properties={"qcm.planning": "exact", "qcm.resultat": "exact"})
      * @Groups({"write","read"})
      * @ORM\OneToOne(targetEntity="App\Entity\Qcm",cascade={"persist", "remove"})
      */

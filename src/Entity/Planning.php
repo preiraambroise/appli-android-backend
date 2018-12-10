@@ -9,7 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"read"}})
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
+ *     normalizationContext={"groups"={"read"}}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\PlanningRepository")
  */
 class Planning

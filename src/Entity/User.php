@@ -15,7 +15,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ApiResource(normalizationContext={"groups"={"read"}})
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
+ *     normalizationContext={"groups"={"read"}}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface

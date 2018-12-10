@@ -10,7 +10,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiFilter(SearchFilter::class, properties={"qcm.resultat"})
- * @ApiResource(normalizationContext={"groups"={"read"}}, denormalizationContext={"groups"={"write"}})
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\QcmRepository")
  */
 class Qcm
