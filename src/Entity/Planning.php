@@ -10,14 +10,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
- *     normalizationContext={"groups"={"read"}}
+ *     itemOperations={
+ *          "get"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "put"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *      },
+ *      collectionOperations={
+ *          "post"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "get"={"access_control"="is_granted('ROLE_USER')"}
+ *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\PlanningRepository")
  */
 class Planning
 {
     /**
+     * @Groups({"read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
