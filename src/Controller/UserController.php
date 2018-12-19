@@ -9,10 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
-
 class UserController extends AbstractController
 {
     /**
+     *
      * @Route(
      *     name="api_users_post",
      *     path="/api/users",
@@ -25,11 +25,14 @@ class UserController extends AbstractController
      */
     public function postAction(User $data, UserPasswordEncoderInterface $encoder): User
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Droit insufisant pour accéder à la ressource');
         return $this->encodePassword($data, $encoder);
     }
 
     /**
+     *
      * @Route(
+     *
      *     name="api_users_put",
      *     path="/api/users/{id}",
      *     requirements={"id"="\d+"},
@@ -42,6 +45,7 @@ class UserController extends AbstractController
      */
     public function putAction(User $data, UserPasswordEncoderInterface $encoder): User
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Droit insufisant pour accéder à la ressource');
         return $this->encodePassword($data, $encoder);
     }
 
@@ -51,5 +55,20 @@ class UserController extends AbstractController
         $data->setPassword($encoded);
 
         return $data;
+    }
+
+    /**
+     * @Route(
+     *     name="api_users_getcurrent",
+     *     path="api/users/current",
+     *     methods={"GET"}
+     * )
+     */
+    public function getcurrentUser()
+    {
+        $id = $this->getUser()->getId();
+        return $this->redirectToRoute('api_users_get_item', array(
+            "id" => $id
+        ));
     }
 }

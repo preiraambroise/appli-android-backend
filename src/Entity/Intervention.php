@@ -18,11 +18,11 @@ use App\Services\SecurityUserContext;
  *     itemOperations={
  *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
  *          "put"={"denormalization_context"={"groups"={"write"}}, "access_control"="is_granted('ROLE_ADMIN')"},
- *          "get"={"normalization_context"={"groups"={"read"}}}
+ *          "get"={"normalization_context"={"groups"={"read"}}, "access_control"="is_granted('ROLE_ADMIN')"}
  *     },
  *     collectionOperations={
  *          "post"={"denormalization_context"={"groups"={"write"}}},
- *           "get"={"normalization_context"={"groups"={"read"}}}
+ *           "get"={"normalization_context"={"groups"={"read"}}, "access_control"="is_granted('ROLE_ADMIN')"}
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\InterventionRepository")
@@ -30,7 +30,7 @@ use App\Services\SecurityUserContext;
 class Intervention
 {
     /**
-     * @Groups({"write", "read"})
+     * @Groups({"read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")

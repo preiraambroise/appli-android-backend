@@ -11,16 +11,25 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiFilter(SearchFilter::class, properties={"qcm.resultat"})
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *      attributes={"access_control"="is_granted('ROLE_USER')"},
  *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}}
+ *     denormalizationContext={"groups"={"write"}},
+ *     itemOperations={
+ *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "put"={"denormalization_context"={"groups"={"write"}}, "access_control"="is_granted('ROLE_ADMIN')"},
+ *          "get"={"normalization_context"={"groups"={"read"}}}
+ *     },
+ *     collectionOperations={
+ *          "post"={"denormalization_context"={"groups"={"write"}}},
+ *           "get"={"normalization_context"={"groups"={"read"}}}
+ *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\QcmRepository")
  */
 class Qcm
 {
     /**
-     * @Groups({"write", "read"})
+     * @Groups({"read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")

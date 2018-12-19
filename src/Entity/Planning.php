@@ -10,9 +10,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}},
  *     itemOperations={
  *          "get"={"access_control"="is_granted('ROLE_ADMIN')"},
- *          "put"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *          "put"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"}
  *      },
  *      collectionOperations={
  *          "post"={"access_control"="is_granted('ROLE_ADMIN')"},
@@ -24,7 +27,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Planning
 {
     /**
-     * @Groups({"read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -32,7 +34,7 @@ class Planning
     private $id;
 
     /**
-     * @Groups({"read"})
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      */
     private $nom;

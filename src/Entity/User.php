@@ -16,8 +16,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
- *     normalizationContext={"groups"={"read"}}
+ *     normalizationContext={"groups"={"read"}},
+ *     itemOperations={
+ *          "get"={
+ *              "access_control"="is_granted('ROLE_ADMIN') or object == user",
+ *              "access_control_message"="Desolé, vous ne pouvez accéder à ces données."
+ *          },
+ *          "put"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *      },
+ *      collectionOperations={
+ *          "post"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *          "get"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *     }
+ *
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
@@ -37,6 +49,7 @@ class User implements UserInterface
     private $username;
 
     /**
+     * @Groups({"read"})
      * @ORM\Column(type="json")
      */
     private $roles = [];
